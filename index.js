@@ -1,15 +1,19 @@
-    // requerimentos
-    const Discord = require('discord.js');
 
-    // definir cliente
+    const Discord = require('discord.js');
+    const dotenv = require('dotenv')
+    
+    dotenv.config()
+    const TOKEN = process.env.TOKEN
+
+
     const Client = new Discord.Client({
         intents: 33027
     })
 
-    // contenido
+  
     Client.on('ready', async ( client ) => {
          console.log('Estoy listo!')
     })
 
-    // conectar
-    Client.login('MTIwOTc3NDczMDg4MjcxOTc3Ng.GunfGC.FcYZzRvuwPVnzgdIEsNcvC1Mj6blEErDTvrRHA')
+
+    Client.login(TOKEN)
