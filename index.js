@@ -1,4 +1,4 @@
-const { Client, GatewayIntentBits, Events, Collection } = require('discord.js')
+const { Client, GatewayIntentBits, Events, Collection, EmbedBuilder } = require('discord.js')
 const dotenv = require('dotenv')
 const fs = require('node:fs')
 const path = require('node:path')
@@ -29,6 +29,31 @@ for (const folder of commandFolders) {
 
 client.once(Events.ClientReady, readyClient => {
   console.log(`Logged in as ${readyClient.user.tag}!`)
+})
+
+client.on(Events.MessageCreate, message => {
+  if (message.content.startsWith('!enviarEmbed')) {
+    // Extraer el contenido del mensaje JSON del comando
+    const content = message.content.substring('!enviarEmbed'.length).trim()
+    try {
+      const embedData = JSON.parse(content)
+
+      const embed = new EmbedBuilder()
+        .setTitle(embedData.title)
+        .setDescription(embedData.description)
+        .setColor(embedData.color)
+
+      embedData.fields.forEach(field => {
+        embed.addField(field.name, field.value, field.inline)
+      })
+
+      // Enviar el mensaje embed al canal de texto
+      const channel = message.channel
+      channel.send(embed)
+    } catch (error) {
+      message.reply('Error al analizar el JSON')
+    }
+  }
 })
 
 client.on(Events.InteractionCreate, async interaction => {
