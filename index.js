@@ -8,8 +8,9 @@ const TOKEN = process.env.TOKEN
 
 const client = new Client({
   intents: [
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMessages
+    'Guilds',
+    'GuildMessages',
+    'MessageContent'
   ]
 })
 client.commands = new Collection()
