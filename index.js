@@ -1,28 +1,29 @@
-import { Client, GatewayIntentBits, Events, Collection, EmbedBuilder } from 'discord.js'
-import { config } from 'dotenv'
-import { readdirSync } from 'node:fs'
-import { join } from 'node:path'
+const { Client, GatewayIntentBits, Events, Collection, EmbedBuilder } = require('discord.js')
+const dotenv = require('dotenv')
+const fs = require('node:fs')
+const path = require('node:path')
 
-config()
+dotenv.config()
 const TOKEN = process.env.TOKEN
 
 const client = new Client({
   intents: [
     'Guilds',
     'GuildMessages',
-    'MessageContent'
+    'MessageContent',
+    'DirectMessages'
   ]
 })
 client.commands = new Collection()
 
-const foldersPath = join(__dirname, 'commands')
-const commandFolders = readdirSync(foldersPath)
+const foldersPath = path.join(__dirname, 'commands')
+const commandFolders = fs.readdirSync(foldersPath)
 
 for (const folder of commandFolders) {
-  const commandsPath = join(foldersPath, folder)
-  const commandFiles = readdirSync(commandsPath).filter(file => file.endsWith('.js'))
+  const commandsPath = path.join(foldersPath, folder)
+  const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'))
   for (const file of commandFiles) {
-    const filePath = join(commandsPath, file)
+    const filePath = path.join(commandsPath, file)
     const command = require(filePath)
     // Set a new item in the Collection with the key as the command name and the value as the exported module
     if ('data' in command && 'execute' in command) {
@@ -39,7 +40,7 @@ client.once(Events.ClientReady, readyClient => {
 
 client.on(Events.MessageCreate, message => {
   const channel = message.channel
-  channel.send('Hello, world!')
+  channel.send(`Hola ${message.content}`)
   // if (message.content.startsWith('!enviarEmbed')) {
   //   // Extraer el contenido del mensaje JSON del comando
   //   const content = message.content.substring('!enviarEmbed'.length).trim()
